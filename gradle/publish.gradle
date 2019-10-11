@@ -1,0 +1,63 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+version = versions.release // 版本号
+group = GROUPID // 一般为包名
+
+install {
+    repositories.mavenInstaller {
+        // 生成POM.xml
+        pom {
+            project {
+                packaging 'jar'
+                name LIB_DESC // 项目描述
+                url urls.git
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer { // 开发者个人信息
+                        id USER_ID
+                        name USER_NAME
+                        email USER_EMAIL
+                    }
+                }
+                scm {
+                    connection urls.git
+                    developerConnection urls.git
+                    url urls.web
+                }
+            }
+        }
+    }
+}
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven" // 发布到Maven库
+        name = LIB_NAME // 发布到JCenter上的项目名字
+        websiteUrl = urls.web
+        vcsUrl = urls.git
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
