@@ -1,6 +1,9 @@
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 version = versions.release // 版本号
 group = GROUPID // 一般为包名
 
@@ -20,9 +23,9 @@ install {
                 }
                 developers {
                     developer { // 开发者个人信息
-                        id USER_ID
-                        name USER_NAME
-                        email USER_EMAIL
+                        id properties.getProperty("USER_ID")
+                        name properties.getProperty("USER_NAME")
+                        email properties.getProperty("USER_EMAIL")
                     }
                 }
                 scm {
@@ -46,8 +49,7 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
