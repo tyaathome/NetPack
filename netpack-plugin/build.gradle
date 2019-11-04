@@ -1,0 +1,12 @@
+apply plugin: 'java-library'
+apply plugin: 'groovy'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
+
+apply from: rootProject.file('gradle/publish-plugin.gradle')

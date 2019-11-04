@@ -1,4 +1,4 @@
-package com.tyaathome.compiler;
+package com.tyaathome.processor;
 
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
@@ -8,6 +8,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.tyaathome.annotation.NetPack;
+import com.tyaathome.annotation.PackDown;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -26,12 +27,13 @@ import javax.lang.model.element.TypeElement;
 @AutoService(Processor.class)
 public class NetPackProcessor extends AbstractProcessor {
 
-    private static final String PACKAGE_NAME = "com.pcs.knowing_weather";
+    private static final String PACKAGE_NAME = "com.tyaathome.netpack";
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         HashSet<String> supportTypes = new LinkedHashSet<>();
         supportTypes.add(NetPack.class.getCanonicalName());
+        supportTypes.add(PackDown.class.getCanonicalName());
         return supportTypes;
     }
 
@@ -47,6 +49,12 @@ public class NetPackProcessor extends AbstractProcessor {
                 .addModifiers(Modifier.PUBLIC);
 
         ClassName returnType = ClassName.get("com.pcs.knowing_weather.net.pack.base", "BasePackDown");
+        Set<? extends Element> downElements = roundEnv.getElementsAnnotatedWith(PackDown.class);
+        for(Element element : downElements) {
+            TypeElement typeElement = (TypeElement) element;
+            returnType = ClassName.get(typeElement);
+        }
+
         MethodSpec.Builder methodSpecBuilder = MethodSpec.methodBuilder("getResponse")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addParameter(String.class, "keytemp")

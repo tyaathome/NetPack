@@ -1,5 +1,5 @@
-include ':app'
+include ':app', ':netpack-plugin'
 include ':netpack'
-include ':netpack-compiler'
+include ':netpack-processor'
 include ':netpack-annotation'
 rootProject.name='NetPack'
