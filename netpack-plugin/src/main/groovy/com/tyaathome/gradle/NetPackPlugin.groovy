@@ -7,7 +7,7 @@ class NetPackPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        project.dependencies.add("implementation", "com.tyaathome:netpack-annotation:0.0.1")
-        project.dependencies.add("annotationProcessor", "com.tyaathome:netpack-compiler:0.0.1")
+        project.dependencies.add("implementation", "com.tyaathome:netpack-annotation:0.0.5")
+        project.dependencies.add("annotationProcessor", "com.tyaathome:netpack-processor:0.0.5")
     }
 }

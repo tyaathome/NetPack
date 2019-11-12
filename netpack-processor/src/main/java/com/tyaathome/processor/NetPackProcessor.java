@@ -28,6 +28,7 @@ import javax.lang.model.element.TypeElement;
 public class NetPackProcessor extends AbstractProcessor {
 
     private static final String PACKAGE_NAME = "com.tyaathome.netpack";
+    private boolean hasProcessed = false;
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
@@ -44,7 +45,19 @@ public class NetPackProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        if(!hasProcessed) {
+            hasProcessed = true;
+            return !createNetPackFile(roundEnv);
+        }
+        return false;
+    }
 
+    /**
+     * 生成工厂文件
+     * @param roundEnv roundEnv
+     * @return true: 生成成功 false:生成失败
+     */
+    private boolean createNetPackFile(RoundEnvironment roundEnv) {
         TypeSpec.Builder classSpecBuilder = TypeSpec.classBuilder("NetFactory")
                 .addModifiers(Modifier.PUBLIC);
 
@@ -90,6 +103,7 @@ public class NetPackProcessor extends AbstractProcessor {
             javaFile.writeTo(processingEnv.getFiler());
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
